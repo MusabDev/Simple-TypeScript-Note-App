@@ -1,0 +1,72 @@
+* {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  padding: 1rem;
+  background-color: aliceblue;
+}
+label {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+h1 {
+  margin-bottom: 2rem;
+}
+textarea {
+  display: block;
+  margin-bottom: 1rem;
+  width: 100%;
+  height: 10rem;
+  resize: vertical;
+}
+button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.inputBox {
+  margin-bottom: 3rem;
+}
+#notesList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-inline: -1rem;
+}
+#notesList li {
+  max-width: 250px;
+  width: 100%;
+  background-color: white;
+  padding: 1rem;
+  line-height: 1.7rem;
+  font-size: 1rem;
+  margin: 1rem;
+}
+#notesList li p {
+  margin: 0.5rem 0;
+}
+#notesList li small {
+  border-top: 1px solid #ccc;
+  display: block;
+  padding-top: 0.3rem;
+}
+input {
+  width: 100%;
+  margin-bottom: 0.7rem;
+}
+input, textarea {
+  padding: 0.5rem;
+}
+#removeNotes {
+  background: red;
+  color: white;
+  border: none;
+}
+#addNote {
+  background: #06f;
+  color: white;
+  border: none;
+}
