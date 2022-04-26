@@ -14,3 +14,13 @@ or
 ```bash
 yarn install
 ```
+
+## Watch TypeScript
+
+```bash
+npm start
+```
+or
+```bash
+yarn start
+```
