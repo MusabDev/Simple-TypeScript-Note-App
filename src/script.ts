@@ -1,79 +1,96 @@
-type Note = {
-  title: string,
-  text: string,
+type Notes = {
+  title: string
+  text: string
   date: string
 }
 
-var notes = [] as Note[]
-
-const title = document.querySelector<HTMLTextAreaElement>("#title")
-const note = document.querySelector<HTMLTextAreaElement>("#note")
-const submitButton = document.querySelector<HTMLButtonElement>("#addNote") 
-const removeButton = document.querySelector<HTMLButtonElement>("#removeNotes") 
-const notesList = document.querySelector<HTMLDivElement>('#notesList')
-const notesContainer = document.querySelector<HTMLDivElement>('#notes')
-const noteFoundContent = '<li>No notes found</li>'
-
-submitButton?.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  if (title == null || note == null || title.value == "" || note.value == "") return alert("Please fill all the fields");
-
-  const data: Note = {
-    title: title.value,
-    text: note.value,
-    date: new Date().toLocaleString()
-  }
-
-  const response = addNote(data);
-  if (response == false) return alert("Something wrong went");
-
-  title.value = ''
-  note.value = ''
-})
-
-function addNote(details: Note): boolean {
-  if (notesList != null && notesList.innerHTML == noteFoundContent) notesList.innerHTML = ''
-
-  const li = document.createElement('li') as HTMLLIElement
-  li.innerHTML = `<h3>${details.title}</h3><p>${details.text}</p><small>${details.date.toLocaleString()}</small>`
-
-  if (notesList == null) return false
-
-  notesList.appendChild(li)
-  notes.push(details)
-  localStorage.setItem("notes", JSON.stringify(notes))
-
-  return true;
+var notes = [] as Notes[]
+let notesLocal = localStorage.getItem("notes")
+if (notesLocal) {
+  notes = JSON.parse(notesLocal)
 }
 
-function loadNotes() {
-  const localNotes = localStorage.getItem("notes")
+/*
+<li>
+  <h3>Note title</h3>
+  <p>Description</p>
+  <small>5/12/2022, 7:38:30 PM</small>
+</li>    
+*/
 
-  if (notesList == null) return
-  if (localNotes == null) {
-    notesList.innerHTML = noteFoundContent
-    return;
+const title = document.querySelector<HTMLInputElement>("#title")
+const text = document.querySelector<HTMLInputElement>("#note")
+const addBtn = document.querySelector<HTMLInputElement>("#addNote")
+const removeBtn = document.querySelector<HTMLInputElement>("#removeNotes")
+const noteList = document.querySelector<HTMLUListElement>("#notesList")
+
+function loadNotes() {
+  if (noteList === null) return
+  noteList.innerHTML = ""
+  if (notes.length === 0) {
+    const li = document.createElement("li")
+    const text = document.createElement("p")
+    text.innerText = "No notes yet"
+    li.append(text)
+    noteList.append(li)
+    return
   }
 
-  const notesArray = JSON.parse(localNotes) as Note[]
-  notesArray.forEach((details: Note) => {
-    notes.push(details)
-
-    const li = document.createElement('li') as HTMLLIElement
-    li.innerHTML = `<h3>${details.title}</h3><p>${details.text}</p><small>${details.date.toLocaleString()}</small>`
-  
-    if (notesList == null) return false
-    notesList.appendChild(li)
+  notes.forEach((data: Notes) => {
+    const li = document.createElement("li")
+    const title = document.createElement("h3")
+    title.innerText = data.title
+    li.append(title)
+    const text = document.createElement("p")
+    text.innerText = data.text
+    li.append(text)
+    const date = document.createElement("small")
+    date.innerText = data.date
+    li.append(date)
+    noteList.append(li)
   })
 }
 
+function addNote(data: Notes) {
+  notes.push(data)
+  localStorage.setItem("notes", JSON.stringify(notes))
+  loadNotes()
+}
+
+removeBtn?.addEventListener("click", function (e) {
+  e.preventDefault()
+
+  localStorage.removeItem("notes")
+  notes = [] as Notes[]
+  loadNotes()
+})
+
 loadNotes()
 
-removeButton?.addEventListener("click", (e) => {
-  notes = [] as Note[]
-  localStorage.removeItem("notes")
+addBtn?.addEventListener("click", function (e) {
+  e.preventDefault()
 
-  if (notesList == null || notesContainer == null) return
-  notesList.innerHTML = noteFoundContent
+  if (title == null || text == null) return
+
+  const titleValue = title?.value as string | null
+  const textValue = text?.value as string | null
+  if (
+    titleValue === null ||
+    titleValue.length === 0 ||
+    textValue === null ||
+    textValue.length === 0
+  ) {
+    alert("Please fill all the fields")
+    return
+  }
+
+  const note = {
+    title: titleValue,
+    text: textValue,
+    date: new Date().toLocaleString(),
+  }
+  addNote(note)
+
+  title.value = ""
+  text.value = ""
 })

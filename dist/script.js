@@ -1,62 +1,78 @@
 "use strict";
 var notes = [];
-const title = document.querySelector("#title");
-const note = document.querySelector("#note");
-const submitButton = document.querySelector("#addNote");
-const removeButton = document.querySelector("#removeNotes");
-const notesList = document.querySelector('#notesList');
-const notesContainer = document.querySelector('#notes');
-const noteFoundContent = '<li>No notes found</li>';
-submitButton === null || submitButton === void 0 ? void 0 : submitButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (title == null || note == null || title.value == "" || note.value == "")
-        return alert("Please fill all the fields");
-    const data = {
-        title: title.value,
-        text: note.value,
-        date: new Date().toLocaleString()
-    };
-    const response = addNote(data);
-    if (response == false)
-        return alert("Something wrong went");
-    title.value = '';
-    note.value = '';
-});
-function addNote(details) {
-    if (notesList != null && notesList.innerHTML == noteFoundContent)
-        notesList.innerHTML = '';
-    const li = document.createElement('li');
-    li.innerHTML = `<h3>${details.title}</h3><p>${details.text}</p><small>${details.date.toLocaleString()}</small>`;
-    if (notesList == null)
-        return false;
-    notesList.appendChild(li);
-    notes.push(details);
-    localStorage.setItem("notes", JSON.stringify(notes));
-    return true;
+let notesLocal = localStorage.getItem("notes");
+if (notesLocal) {
+    notes = JSON.parse(notesLocal);
 }
+/*
+<li>
+  <h3>Note title</h3>
+  <p>Description</p>
+  <small>5/12/2022, 7:38:30 PM</small>
+</li>
+*/
+const title = document.querySelector("#title");
+const text = document.querySelector("#note");
+const addBtn = document.querySelector("#addNote");
+const removeBtn = document.querySelector("#removeNotes");
+const noteList = document.querySelector("#notesList");
 function loadNotes() {
-    const localNotes = localStorage.getItem("notes");
-    if (notesList == null)
+    if (noteList === null)
         return;
-    if (localNotes == null) {
-        notesList.innerHTML = noteFoundContent;
+    noteList.innerHTML = "";
+    if (notes.length === 0) {
+        const li = document.createElement("li");
+        const text = document.createElement("p");
+        text.innerText = "No notes yet";
+        li.append(text);
+        noteList.append(li);
         return;
     }
-    const notesArray = JSON.parse(localNotes);
-    notesArray.forEach((details) => {
-        notes.push(details);
-        const li = document.createElement('li');
-        li.innerHTML = `<h3>${details.title}</h3><p>${details.text}</p><small>${details.date.toLocaleString()}</small>`;
-        if (notesList == null)
-            return false;
-        notesList.appendChild(li);
+    notes.forEach((data) => {
+        const li = document.createElement("li");
+        const title = document.createElement("h3");
+        title.innerText = data.title;
+        li.append(title);
+        const text = document.createElement("p");
+        text.innerText = data.text;
+        li.append(text);
+        const date = document.createElement("small");
+        date.innerText = data.date;
+        li.append(date);
+        noteList.append(li);
     });
 }
-loadNotes();
-removeButton === null || removeButton === void 0 ? void 0 : removeButton.addEventListener("click", (e) => {
-    notes = [];
+function addNote(data) {
+    notes.push(data);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    loadNotes();
+}
+removeBtn === null || removeBtn === void 0 ? void 0 : removeBtn.addEventListener("click", function (e) {
+    e.preventDefault();
     localStorage.removeItem("notes");
-    if (notesList == null || notesContainer == null)
+    notes = [];
+    loadNotes();
+});
+loadNotes();
+addBtn === null || addBtn === void 0 ? void 0 : addBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (title == null || text == null)
         return;
-    notesList.innerHTML = noteFoundContent;
+    const titleValue = title === null || title === void 0 ? void 0 : title.value;
+    const textValue = text === null || text === void 0 ? void 0 : text.value;
+    if (titleValue === null ||
+        titleValue.length === 0 ||
+        textValue === null ||
+        textValue.length === 0) {
+        alert("Please fill all the fields");
+        return;
+    }
+    const note = {
+        title: titleValue,
+        text: textValue,
+        date: new Date().toLocaleString(),
+    };
+    addNote(note);
+    title.value = "";
+    text.value = "";
 });

@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TypeScript Note</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript Note</title>
 
-  <link rel="stylesheet" href="./dist/style.css">
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./dist/script.js" defer></script>
+  </head>
+  <body>
+    <div class="inputBox">
+      <label for="note">Enter your note details</label>
+      <input type="text" id="title" placeholder="Title" />
+      <textarea id="note" placeholder="Description"></textarea>
+      <button id="addNote">Add Note</button>
+    </div>
 
-  <script src="./dist/script.js" defer></script>
-</head>
-<body>
-  <div class="inputBox">
-    <label for="note">Enter your note details</label>
-    <input type="text" id="title" placeholder="Title">
-    <textarea id="note"></textarea>
-    <button id="addNote">Add Note</button>
-  </div>
-
-  <div id="notes">
-    <h2>Notes</h2>
-    <ul id="notesList"></ul>
-    <button id="removeNotes">Remove All</button>
-  </div>
-</body>
+    <div id="notes">
+      <h2>Notes</h2>
+      <ul id="notesList"></ul>
+      <button id="removeNotes">Remove All</button>
+    </div>
+  </body>
 </html>
